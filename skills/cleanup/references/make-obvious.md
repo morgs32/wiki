@@ -4,8 +4,8 @@ Reduce the amount a maintainer must hold in working memory. Work on one
 invariant-sized slice at a time. A cleanup pass is a bounded queue of such
 slices, not permission to rewrite the repository.
 
-This workflow requires the shared `$patterns` skill. Invoke it through skill
-selection; do not assume it exists at a sibling filesystem path. If `$patterns`
+This workflow requires the shared `$use-morgs32-wiki-patterns` skill. Invoke it through skill
+selection; do not assume it exists at a sibling filesystem path. If `$use-morgs32-wiki-patterns`
 is unavailable, report the missing prerequisite and stop.
 
 ## Choose the lens
@@ -40,7 +40,7 @@ pause unless it changes behavior, public surface, ownership, or architecture.
    that owns a public promise, lifecycle, failure policy, observation rule, or
    one concrete readability problem. Do not inventory every possible refactor
    before teaching or fixing the selected slice.
-4. Invoke `$patterns` and search its index for the exact task. For behavioral
+4. Invoke `$use-morgs32-wiki-patterns` and search its index for the exact task. For behavioral
    orchestration, read **Readable workflow boundaries**. For a one-caller
    wrapper around one simple call, read **inline-one-call-simple-helpers**.
    When the slice contains concurrency, scopes, fibers, latches, streams,
@@ -141,7 +141,7 @@ complexity is essential and stop.
    clearer. This is the skill's production helper and workflow-module rule:
    every retained helper function has its own file, and each source file
    exports at most one function. Anonymous callbacks and class methods are not
-   separate helper functions. See the boundary rationale in the `$patterns`
+   separate helper functions. See the boundary rationale in the `$use-morgs32-wiki-patterns`
    **Readable workflow boundaries** pattern.
    Treat an immediate kind branch as evidence that the boundary may hide
    multiple workflows when the branches have materially different inputs,

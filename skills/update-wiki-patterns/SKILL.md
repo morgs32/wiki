@@ -1,18 +1,22 @@
 ---
-name: update-wiki
+name: update-wiki-patterns
 description: >-
   Codify an agreed convention or reusable repository-specific lesson in the
-  active project's {root}/wiki/** guidance. Use after a code change, when
+  active project's {root}/wiki/patterns/** guidance. Use after a code change, when
   the user names a local pattern, or with no prompt to preserve conclusions
-  from the current chat. Do not use for shared skills or morgs32/wip.
+  from the current chat. Do not use for wiki architecture docs, shared skills,
+  or morgs32/wiki.
 ---
 
-# Update Wiki
+# Update Wiki Patterns
 
-Update only the active project's local `{root}/wiki/**` tree. You may read
+Update only the active project's local `{root}/wiki/patterns/**` tree. You may read
 the rest of the repository to ground the guidance, but do not write to root
 `AGENTS.md`, `skills/**`, `.agents/**`, `vendor/**`, installed skills, another
 checkout, or remote state.
+
+For `{root}/wiki/architecture/**` workflow documentation, use
+[update-wiki-architecture](../update-wiki-architecture/SKILL.md).
 
 If the active repository has no `{root}/wiki/` directory, stop and report
 that there is no local wiki profile to update.
@@ -77,7 +81,7 @@ states the same rule clearly.
 
 7. **Keep scope tight**
    Write one pattern per lesson and touch only files under
-   `{root}/wiki/**`. Report any desirable change outside that boundary
+   `{root}/wiki/patterns/**`. Report any desirable change outside that boundary
    instead of making it.
 
 Use imperative, specific, scannable prose. Prefer “Do X” and “Do not Y” over

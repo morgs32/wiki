@@ -39,7 +39,7 @@ Change imports only; do not bundle shape cleanup.
 Treat the user-named scope as an ordered queue of coherent slices.
 
 1. Match each concrete smell to repository instructions and the relevant
-   `$patterns` entry. Read project-local case studies only when repository
+   `$use-morgs32-wiki-patterns` entry. Read project-local case studies only when repository
    guidance routes to them.
 2. Read architecture documentation before touching ownership, trust, runtime,
    persistence, or cross-process boundaries.

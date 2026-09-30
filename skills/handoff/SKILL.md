@@ -15,10 +15,10 @@ directory.
 
 ## Destination and lifecycle
 
-1. Use the active project's established `PLAN_ROOT`, following [spec's root selection](../spec/SKILL.md#phase-2--spec-one-file). Write under `PLAN_ROOT/handoffs/`; create that directory if needed.
-2. For work tied to a numbered spec or plan, reuse its number and topic: `XXX-handoff-<topic>.md`. For standalone work, use `YYYY-MM-DD-handoff-<topic>.md`; do not allocate a spec/plan number.
+1. Write under the active project's `wiki/handoffs/`, following [spec's document conventions](../spec/SKILL.md#document-conventions); create that directory if needed.
+2. For work tied to a numbered plan or legacy spec, reuse its number and topic: `XXX-handoff-<topic>.md`. For standalone work, use `YYYY-MM-DD-handoff-<topic>.md`; do not allocate a plan number.
 3. Write one handoff, or update the existing handoff for the same work. Treat user arguments as the next session's focus.
-4. Creating a handoff does not change or archive its source spec or plan. Archive the handoff only after verified completion, or after its receiving context is superseded and reconciled into current source documentation with remaining actions recorded elsewhere. Move it to `PLAN_ROOT/archived/` without renaming.
+4. Creating a handoff does not change or archive its source spec or plan. Archive the handoff only after verified completion, or after its receiving context is superseded and reconciled into current source documentation with remaining actions recorded elsewhere. Move it to `wiki/archive/handoffs/` without renaming, and repair inbound and relative links.
 
 ## Contents
 

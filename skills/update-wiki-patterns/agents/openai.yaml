@@ -1,0 +1,3 @@
+interface:
+  display_name: "Update Wiki Patterns"
+  short_description: "Maintain repository-local wiki patterns"

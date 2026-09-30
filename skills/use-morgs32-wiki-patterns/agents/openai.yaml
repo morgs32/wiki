@@ -1,0 +1,4 @@
+interface:
+  display_name: "Use Morgs32 Wiki Patterns"
+  short_description: "Consult shared engineering patterns when relevant"
+  default_prompt: "Use $use-morgs32-wiki-patterns to review this change against the shared code-shape guidance."

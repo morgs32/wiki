@@ -1,6 +1,6 @@
 # llm-wiki patterns
 
-Shareable code-shape guidance packaged with the `$patterns` skill.
+Shareable code-shape guidance packaged with the `$use-morgs32-wiki-patterns` skill.
 
 ## Format
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Update Morgs32 Wiki"
+  short_description: "Update shared patterns and skills in morgs32/wiki"
+  default_prompt: "Use $update-morgs32-wiki to update shared patterns or skills in morgs32/wiki."

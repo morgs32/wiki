@@ -1,0 +1,4 @@
+interface:
+  display_name: "Specs"
+  short_description: "Zerospin specs by behavioral contract"
+  default_prompt: "Use $specs to write or review tests for these Zerospin methods and their admission boundaries."

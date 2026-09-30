@@ -120,7 +120,7 @@ Use $engineering-patterns.
     assert.equal(first.changed, true);
     assert.equal(second.changed, false);
     assert.ok(configured.includes("<!-- patterns configuration start-->"));
-    assert.ok(configured.includes("invoke `$patterns`"));
+    assert.ok(configured.includes("invoke `$use-morgs32-wiki-patterns`"));
     assert.ok(!configured.includes("engineering-patterns"));
     assert.equal(readFileSync(agentsPath, "utf8"), configured);
   });
@@ -144,61 +144,67 @@ test("rejects mixed legacy and current managed blocks", () => {
   });
 });
 
-test("migrates only a same-source legacy global skill", () => {
-  withRepository((repository) => {
-    const binPath = join(repository, "bin");
-    const globalRoot = join(repository, "global", ".agents");
-    const skillsRoot = join(globalRoot, "skills");
-    const legacySkillPath = join(skillsRoot, "engineering-patterns");
-    const lockPath = join(globalRoot, ".skill-lock.json");
-    const codexRoot = join(repository, "codex");
-    const validatorPath = join(
-      codexRoot,
-      "skills/.system/skill-creator/scripts/quick_validate.py",
-    );
-    const validatorMarker = join(repository, "validator-called");
-    const preloadPath = join(repository, "mock-fetch.mjs");
-    const npxPath = join(binPath, "npx");
+for (const legacyName of ["patterns", "engineering-patterns"]) {
+  for (const legacySource of ["morgs32/wip", "morgs32/wiki"]) {
+    test(`migrates ${legacyName} from ${legacySource} and preserves it on failure`, () => {
+      withRepository((repository) => {
+        const binPath = join(repository, "bin");
+        const globalRoot = join(repository, "global", ".agents");
+        const skillsRoot = join(globalRoot, "skills");
+        const legacySkillPath = join(skillsRoot, legacyName);
+        const lockPath = join(globalRoot, ".skill-lock.json");
+        const codexRoot = join(repository, "codex");
+        const validatorPath = join(
+          codexRoot,
+          "skills/.system/skill-creator/scripts/quick_validate.py",
+        );
+        const validatorMarker = join(repository, "validator-called");
+        const preloadPath = join(repository, "mock-fetch.mjs");
+        const npxPath = join(binPath, "npx");
 
-    mkdirSync(binPath, { recursive: true });
-    mkdirSync(legacySkillPath, { recursive: true });
-    mkdirSync(join(validatorPath, ".."), { recursive: true });
-    writeFileSync(join(repository, "AGENTS.md"), "# Repository\n");
-    writeFileSync(
-      lockPath,
-      JSON.stringify({
-        skills: {
-          "engineering-patterns": {
-            source: "morgs32/wip",
-            sourceType: "github",
-            skillPath: "skills/engineering-patterns/SKILL.md",
-            skillFolderHash: "legacy-hash",
-            ref: "main",
-          },
-        },
-      }),
-    );
-    writeFileSync(
-      validatorPath,
-      `import os
+        mkdirSync(binPath, { recursive: true });
+        mkdirSync(legacySkillPath, { recursive: true });
+        mkdirSync(join(validatorPath, ".."), { recursive: true });
+        writeFileSync(join(repository, "AGENTS.md"), "# Repository\n");
+        writeFileSync(
+          lockPath,
+          JSON.stringify({
+            skills: {
+              [legacyName]: {
+                source: legacySource,
+                sourceType: "github",
+                skillPath: `skills/${legacyName}/SKILL.md`,
+                skillFolderHash: "legacy-hash",
+                ref: "main",
+              },
+            },
+          }),
+        );
+        writeFileSync(
+          validatorPath,
+          `import os
 from pathlib import Path
 Path(os.environ["VALIDATOR_MARKER"]).write_text("called")
 `,
-    );
-    writeFileSync(
-      preloadPath,
-      `globalThis.fetch = async () => ({
+        );
+        writeFileSync(
+          preloadPath,
+          `import os from "node:os";
+import { syncBuiltinESMExports } from "node:module";
+os.homedir = () => process.env.SKILLS_TEST_HOME;
+syncBuiltinESMExports();
+globalThis.fetch = async () => ({
   ok: true,
   status: 200,
   json: async () => ({
-    tree: [{ path: "skills/patterns", type: "tree", sha: "published-hash" }],
+    tree: [{ path: "skills/use-morgs32-wiki-patterns", type: "tree", sha: "published-hash" }],
   }),
 });
 `,
-    );
-    writeFileSync(
-      npxPath,
-      `#!/usr/bin/env node
+        );
+        writeFileSync(
+          npxPath,
+          `#!/usr/bin/env node
 import {
   existsSync,
   mkdirSync,
@@ -232,18 +238,20 @@ if (command === "list") {
   mkdirSync(join(target, "scripts"), { recursive: true });
   writeFileSync(
     join(target, "SKILL.md"),
-    "---\\nname: patterns\\ndescription: Apply shared patterns.\\n---\\n\\n# Patterns\\n",
+    "---\\nname: use-morgs32-wiki-patterns\\ndescription: Apply shared patterns.\\n---\\n\\n# Patterns\\n",
   );
   writeFileSync(join(target, "references/patterns/index.md"), "# Patterns\\n");
   writeFileSync(join(target, "scripts/configure.mjs"), "");
   lock.skills[name] = {
-    source: "morgs32/wip",
+    source: "morgs32/wiki",
     sourceType: "github",
-    skillPath: "skills/patterns/SKILL.md",
+    skillPath: "skills/use-morgs32-wiki-patterns/SKILL.md",
     skillFolderHash: "published-hash",
     ref: "main",
   };
   writeFileSync(lockPath, JSON.stringify(lock));
+} else if (command === "update") {
+  process.stdout.write("All global skills are up to date");
 } else if (command === "remove") {
   const name = process.argv[4];
   if (!existsSync(process.env.VALIDATOR_MARKER)) {
@@ -264,81 +272,98 @@ if (command === "list") {
   throw new Error("unexpected fake Skills CLI command: " + command);
 }
 `,
-    );
-    chmodSync(npxPath, 0o755);
+        );
+        chmodSync(npxPath, 0o755);
 
-    const environment = {
-      ...process.env,
-      CODEX_HOME: codexRoot,
-      NODE_OPTIONS: [
-        process.env.NODE_OPTIONS,
-        `--import=${preloadPath}`,
-      ]
-        .filter(Boolean)
-        .join(" "),
-      PATH: `${binPath}${delimiter}${process.env.PATH ?? ""}`,
-      SKILLS_TEST_ROOT: globalRoot,
-      SKILLS_TEST_REPOSITORY: repository,
-      VALIDATOR_MARKER: validatorMarker,
-    };
-    const configurePath = fileURLToPath(
-      new URL("./configure.mjs", import.meta.url),
-    );
+        const environment = {
+          ...process.env,
+          CODEX_HOME: codexRoot,
+          NODE_OPTIONS: [
+            process.env.NODE_OPTIONS,
+            `--import=${preloadPath}`,
+          ]
+            .filter(Boolean)
+            .join(" "),
+          PATH: `${binPath}${delimiter}${process.env.PATH ?? ""}`,
+          SKILLS_TEST_HOME: join(repository, "global"),
+          SKILLS_TEST_ROOT: globalRoot,
+          SKILLS_TEST_REPOSITORY: repository,
+          VALIDATOR_MARKER: validatorMarker,
+        };
+        const configurePath = fileURLToPath(
+          new URL("./configure.mjs", import.meta.url),
+        );
 
-    const checkResult = spawnSync(
-      process.execPath,
-      [configurePath, "--check", repository],
-      { encoding: "utf8", env: environment },
-    );
-    assert.equal(checkResult.status, 1, checkResult.stderr);
-    assert.match(checkResult.stderr, /legacy global engineering-patterns/);
-    assert.ok(existsSync(legacySkillPath));
+        const checkResult = spawnSync(
+          process.execPath,
+          [configurePath, "--check", repository],
+          { encoding: "utf8", env: environment },
+        );
+        assert.equal(checkResult.status, 1, checkResult.stderr);
+        assert.ok(checkResult.stderr.includes(`legacy global ${legacyName}`), checkResult.stderr);
+        assert.ok(existsSync(legacySkillPath));
 
-    const migrationResult = spawnSync(
-      process.execPath,
-      [configurePath, repository],
-      { encoding: "utf8", env: environment },
-    );
-    assert.equal(migrationResult.status, 0, migrationResult.stderr);
-    assert.match(migrationResult.stdout, /MIGRATED global patterns/);
-    assert.equal(readFileSync(validatorMarker, "utf8"), "called");
-    assert.ok(!existsSync(legacySkillPath));
-    assert.deepEqual(
-      Object.keys(JSON.parse(readFileSync(lockPath, "utf8")).skills),
-      ["patterns"],
-    );
+        // A malformed destination must not remove the old installation.
+        writeFileSync(join(repository, "AGENTS.md"), "<!-- patterns configuration start-->\n");
+        const failedMigration = spawnSync(
+          process.execPath,
+          [configurePath, repository],
+          { encoding: "utf8", env: environment },
+        );
+        assert.equal(failedMigration.status, 1);
+        assert.match(failedMigration.stderr, /markers are unbalanced/);
+        assert.ok(existsSync(legacySkillPath));
+        // Retry after repairing the destination, with the new skill already installed.
+        writeFileSync(join(repository, "AGENTS.md"), "# Repository\n");
 
-    rmSync(join(skillsRoot, "patterns"), { recursive: true, force: true });
-    mkdirSync(legacySkillPath, { recursive: true });
-    writeFileSync(
-      lockPath,
-      JSON.stringify({
-        skills: {
-          "engineering-patterns": {
-            source: "someone/else",
-            sourceType: "github",
-            skillPath: "skills/engineering-patterns/SKILL.md",
-            skillFolderHash: "foreign-hash",
-            ref: "main",
-          },
-        },
-      }),
-    );
+        const migrationResult = spawnSync(
+          process.execPath,
+          [configurePath, repository],
+          { encoding: "utf8", env: environment },
+        );
+        assert.equal(migrationResult.status, 0, migrationResult.stderr);
+        assert.match(migrationResult.stdout, /MIGRATED global use-morgs32-wiki-patterns/);
+        assert.equal(readFileSync(validatorMarker, "utf8"), "called");
+        assert.ok(!existsSync(legacySkillPath));
+        assert.deepEqual(
+          Object.keys(JSON.parse(readFileSync(lockPath, "utf8")).skills),
+          ["use-morgs32-wiki-patterns"],
+        );
 
-    const refusalResult = spawnSync(
-      process.execPath,
-      [configurePath, repository],
-      { encoding: "utf8", env: environment },
-    );
-    assert.equal(refusalResult.status, 1);
-    assert.match(refusalResult.stderr, /refusing to remove engineering-patterns/);
-    assert.ok(existsSync(legacySkillPath));
-    assert.deepEqual(
-      Object.keys(JSON.parse(readFileSync(lockPath, "utf8")).skills),
-      ["engineering-patterns"],
-    );
-  });
-});
+        rmSync(join(skillsRoot, "use-morgs32-wiki-patterns"), { recursive: true, force: true });
+        mkdirSync(legacySkillPath, { recursive: true });
+        writeFileSync(
+          lockPath,
+          JSON.stringify({
+            skills: {
+              [legacyName]: {
+                source: "someone/else",
+                sourceType: "github",
+                skillPath: `skills/${legacyName}/SKILL.md`,
+                skillFolderHash: "foreign-hash",
+                ref: "main",
+              },
+            },
+          }),
+        );
+
+        const refusalResult = spawnSync(
+          process.execPath,
+          [configurePath, repository],
+          { encoding: "utf8", env: environment },
+        );
+        assert.equal(refusalResult.status, 1);
+        assert.ok(refusalResult.stderr.includes(`refusing to remove ${legacyName}`));
+        assert.ok(existsSync(legacySkillPath));
+        assert.deepEqual(
+          Object.keys(JSON.parse(readFileSync(lockPath, "utf8")).skills),
+          [legacyName],
+        );
+      });
+    });
+
+  }
+}
 
 test("normalizes lowercase root guidance and leaves nested guidance untouched", () => {
   withRepository((repository) => {

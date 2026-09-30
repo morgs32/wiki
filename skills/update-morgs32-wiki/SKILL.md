@@ -1,24 +1,24 @@
 ---
-name: update-wip
+name: update-morgs32-wiki
 description: >-
-  Update shared patterns or skill source in morgs32/wip on main. Use from
+  Update shared patterns or skill source in morgs32/wiki on main. Use from
   this repository when the user asks to change or publish its patterns or
   skills. Do not use for a consuming repository's local {root}/wiki/**
   guidance.
 ---
 
-# Update WIP
+# Update Morgs32 Wiki
 
-Update the canonical `morgs32/wip` source in this checkout. Work on
+Update the canonical `morgs32/wiki` source in this checkout. Work on
 `main` is allowed: edit, commit, and push here when asked. A pull request is
 optional, not required to land the change.
 
 ## Scope
 
-- Shared patterns live under `skills/patterns/references/patterns/**`.
+- Shared patterns live under `skills/use-morgs32-wiki-patterns/references/patterns/**`.
 - Installable shared skills live under `skills/**` (global via the
   `~/.agents/skills` symlink into this checkout).
-- This publication workflow lives under `skills/update-wip/`.
+- This publication workflow lives under `skills/update-morgs32-wiki/`.
 - Root routing or publication policy lives in `AGENTS.md` and `README.md`.
 
 Edit installable skills in this checkout's `skills/**` (that is the live global
@@ -33,8 +33,8 @@ vendor subtree. Preserve unrelated local WIP.
 2. Read root `AGENTS.md`, the affected skill entrypoint, and every directly
    linked instruction needed for the requested change.
 3. For a shared pattern change, read
-   `skills/patterns/references/patterns/README.md` and search
-   `skills/patterns/references/patterns/index.md` before editing. Ground the
+   `skills/use-morgs32-wiki-patterns/references/patterns/README.md` and search
+   `skills/use-morgs32-wiki-patterns/references/patterns/index.md` before editing. Ground the
    pattern in a real example when one exists, update the pattern index in the
    same pass, and keep repository-specific guidance out of the shared skill.
 4. For a skill change, load `$skill-creator`, preserve supported metadata, and
@@ -77,7 +77,7 @@ pull request. It does not authorize merge. A PR is optional.
    Prefer the prefix that matches the publication commit's conventional type —
    for example `docs(patterns): …` on branch
    `docs/inline-one-call-simple-helpers`. Do not use `codex/` prefixes.
-2. Open a ready pull request against `morgs32/wip:main`. Include the
+2. Open a ready pull request against `morgs32/wiki:main`. Include the
    behavioral split, migration details, and local validation in the body.
 3. Verify the pull request head SHA and exact changed-file list. Wait for the
    `validate-skills` check and Codex review on that head; address in-scope

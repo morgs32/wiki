@@ -14,7 +14,7 @@ Surface architectural friction and propose **deepening opportunities**: refactor
 
 This command is _informed_ by the project's domain model and built on a shared design vocabulary:
 
-- Call the Skill tool with "codebase-design" for the architecture vocabulary (**module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**) and its principles (the deletion test, "the interface is the test surface", "one adapter = hypothetical seam, two = real"). Use these terms exactly in every suggestion, and don't drift into "component," "service," "API," or "boundary."
+- Read [rubber-duck’s design reference](../rubber-duck/references/codebase-design.md) for the architecture vocabulary (**module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**) and its principles (the deletion test, "the interface is the test surface", "one adapter = hypothetical seam, two = real"). Use these terms exactly in every suggestion, and don't drift into "component," "service," "API," or "boundary."
 - The domain language in `CONTEXT.md` gives names to good seams; ADRs in `docs/adr/` record decisions this command should not re-litigate.
 
 ## When to run which path
@@ -94,7 +94,7 @@ For each candidate, render a card with:
 
 End the report with a **Top recommendation** section: which candidate you'd tackle first and why.
 
-**Use CONTEXT.md vocabulary for the domain, and the `/codebase-design` vocabulary for the architecture.** If `CONTEXT.md` defines "Order," talk about "the Order intake module," not "the FooBarHandler," and not "the Order service."
+**Use CONTEXT.md vocabulary for the domain, and the [rubber-duck design vocabulary](../rubber-duck/references/codebase-design.md) for the architecture.** If `CONTEXT.md` defines "Order," talk about "the Order intake module," not "the FooBarHandler," and not "the Order service."
 
 **ADR conflicts**: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting the ADR. Mark it clearly in the card (e.g. a warning callout: _"contradicts ADR-0007, but worth reopening because…"_). Don't list every theoretical refactor an ADR forbids.
 
@@ -113,7 +113,7 @@ Side effects happen inline as decisions crystallize:
 - **Naming a deepened module after a concept not already in the project's domain glossary?** If `CONTEXT.md` exists, add the term there. Otherwise keep the canonical name in the conversation; do not create `CONTEXT.md`.
 - **Sharpening a fuzzy term during the conversation?** Update `CONTEXT.md` only when that file already exists.
 - **User rejects the candidate with a load-bearing reason?** Offer an ADR only when the project already uses `docs/adr/` and the reason would stop a future scan from re-suggesting the same thing. Skip ephemeral reasons ("not worth it right now") and self-evident ones.
-- **Want to explore alternative interfaces for the deepened module?** Call the Skill tool with "codebase-design" and use its design-it-twice parallel sub-agent pattern.
+- **Want to explore alternative interfaces for the deepened module?** Read [rubber-duck’s Design It Twice guide](../rubber-duck/references/DESIGN-IT-TWICE.md) and use its parallel sub-agent pattern.
 
 ## Source
 

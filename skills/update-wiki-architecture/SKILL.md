@@ -1,14 +1,14 @@
 ---
-name: update-architecture
+name: update-wiki-architecture
 description: >-
   Sync wiki/architecture workflow docs with source code: sequence diagrams,
   their Annotated workflow steps, Trigger steps, other mermaid diagrams, and
   nested citation bullets. Use when the user asks to update architecture docs,
   workflow docs, mermaid in wiki/architecture, annotated-step citations, or
-  says update-architecture.
+  says update-wiki-architecture.
 ---
 
-# update-architecture
+# Update Wiki Architecture
 
 Keep `wiki/architecture/*.md` workflow docs aligned with the code they describe. Architecture is best demonstrated as interaction, so strongly prefer at least one Mermaid `sequenceDiagram` with matching `## Annotated workflow steps` in every architecture doc in scope for the update.
 
@@ -17,7 +17,7 @@ The post-commit LLM Wiki ingest hook may also update these pages. When editing m
 ## When to apply
 
 - The user changed a workflow, API entrypoint, or repo path and wants the architecture doc updated.
-- The user says **update-architecture**, **update mermaid**, or points at `wiki/architecture/` with code that drifted.
+- The user says **update-wiki-architecture**, **update mermaid**, or points at `wiki/architecture/` with code that drifted.
 - Stay within the **named doc(s)** unless they ask for a broader pass.
 
 ## Workflow

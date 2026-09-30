@@ -15,9 +15,10 @@ import { dirname, resolve, join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-const skillName = "patterns";
-const legacySkillName = "engineering-patterns";
-const skillSource = "morgs32/wip";
+const skillName = "use-morgs32-wiki-patterns";
+const legacySkillNames = ["patterns", "engineering-patterns"];
+const skillSource = "morgs32/wiki";
+const legacySkillSources = [skillSource, "morgs32/wip"];
 const markerStart = "<!-- patterns configuration start-->";
 const markerDescription =
   "<!-- Leave the start & end comments to automatically receive updates. -->";
@@ -29,7 +30,7 @@ const nxMarkerEnd = "<!-- nx configuration end-->";
 
 const usage = `Usage: configure.mjs [--check] [repository ...]
 
-Install or update the global $patterns skill and configure each
+Install or update the global $use-morgs32-wiki-patterns skill and configure each
 repository's root AGENTS.md. When no repository is given, use the current
 working directory.
 
@@ -77,7 +78,7 @@ const renderManagedBlock = ({ content, newline }) => {
     "For TypeScript, Effect, RPC, Next.js, Cloudflare, runtime architecture,",
     "testing, naming, and code-shape work—and whenever a change proposes a new",
     "capability, guarantee, abstraction, compatibility path, or cross-owner",
-    "coordination mechanism—invoke `$patterns` before editing or reviewing code.",
+    "coordination mechanism—invoke `$use-morgs32-wiki-patterns` before editing or reviewing code.",
     "Start at `references/patterns/index.md`, read only the patterns relevant",
     "to the task, and treat this repository's `AGENTS.md` and any repository-local",
     "pattern index as higher-precedence guidance.",
@@ -356,9 +357,9 @@ const verifySkillLock = (installedSkill) => {
     return "global skill lock entry is missing";
   }
   if (entry.source !== skillSource || entry.sourceType !== "github") {
-    return "global skill lock source does not match morgs32/wip";
+    return "global skill lock source does not match morgs32/wiki";
   }
-  if (entry.skillPath !== "skills/patterns/SKILL.md") {
+  if (entry.skillPath !== "skills/use-morgs32-wiki-patterns/SKILL.md") {
     return `global skill lock path is ${entry.skillPath ?? "missing"}`;
   }
   if (!entry.skillFolderHash) {
@@ -374,7 +375,7 @@ const verifySkillLock = (installedSkill) => {
 const readRemoteSkillHash = async () => {
   const token = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN;
   const response = await fetch(
-    "https://api.github.com/repos/morgs32/wip/git/trees/main?recursive=1",
+    "https://api.github.com/repos/morgs32/wiki/git/trees/main?recursive=1",
     {
       headers: {
         Accept: "application/vnd.github+json",
@@ -392,7 +393,7 @@ const readRemoteSkillHash = async () => {
   const tree = await response.json();
   const entry = tree.tree?.find(
     (item) =>
-      item.path === "skills/patterns" && item.type === "tree",
+      item.path === "skills/use-morgs32-wiki-patterns" && item.type === "tree",
   );
   if (!entry?.sha) {
     throw new Error("published patterns tree was not found");
@@ -451,14 +452,16 @@ const configureGlobalSkill = async ({ check }) => {
     }
     return {
       status: "current",
-      legacyInstalled: false,
+      legacyInstalled: [],
       problem,
       liveSymlink: true,
     };
   }
 
   const installedBefore = readInstalledSkill(skillName);
-  const legacyInstalledBefore = readInstalledSkill(legacySkillName);
+  const legacyInstalledBefore = legacySkillNames
+    .map((name) => readInstalledSkill(name))
+    .filter(Boolean);
   if (
     installedBefore &&
     (installedBefore.source !== skillSource ||
@@ -468,14 +471,15 @@ const configureGlobalSkill = async ({ check }) => {
       `refusing to replace ${skillName} from ${installedBefore.source ?? "an unknown source"}`,
     );
   }
-  if (
-    legacyInstalledBefore &&
-    (legacyInstalledBefore.source !== skillSource ||
-      legacyInstalledBefore.sourceType !== "github")
-  ) {
-    throw new Error(
-      `refusing to remove ${legacySkillName} from ${legacyInstalledBefore.source ?? "an unknown source"}`,
-    );
+  for (const legacy of legacyInstalledBefore) {
+    if (
+      !legacySkillSources.includes(legacy.source) ||
+      legacy.sourceType !== "github"
+    ) {
+      throw new Error(
+        `refusing to remove ${legacy.name} from ${legacy.source ?? "an unknown source"}`,
+      );
+    }
   }
 
   const hashBefore = installedBefore
@@ -522,8 +526,8 @@ const configureGlobalSkill = async ({ check }) => {
     }
     return { status: "outdated", problem: staleProblem };
   }
-  if (check && legacyInstalledBefore) {
-    const legacyProblem = `legacy global ${legacySkillName} skill remains installed`;
+  if (check && legacyInstalledBefore.length > 0) {
+    const legacyProblem = `legacy global ${legacyInstalledBefore.map((skill) => skill.name).join(", ")} skill remains installed`;
     problem = problem ? `${problem}; ${legacyProblem}` : legacyProblem;
   }
 
@@ -535,7 +539,7 @@ const configureGlobalSkill = async ({ check }) => {
       : hashBefore === hashAfter
         ? "current"
         : "updated",
-    legacyInstalled: Boolean(legacyInstalledBefore),
+    legacyInstalled: legacyInstalledBefore.map((skill) => skill.name),
     problem,
   };
 };
@@ -571,7 +575,7 @@ const main = async () => {
   if (globalSkill.problem) {
     stale = true;
     console.error(`OUTDATED global ${skillName}: ${globalSkill.problem}`);
-  } else if (options.check || !globalSkill.legacyInstalled) {
+  } else if (options.check || !globalSkill.legacyInstalled?.length) {
     console.log(`${globalSkill.status.toUpperCase()} global ${skillName}`);
   }
 
@@ -587,10 +591,12 @@ const main = async () => {
     }
   }
 
-  if (!options.check && globalSkill.legacyInstalled) {
-    runSkills(["remove", legacySkillName, "-g", "-y"]);
-    if (readInstalledSkill(legacySkillName)) {
-      throw new Error(`legacy global ${legacySkillName} skill is still installed`);
+  if (!options.check && globalSkill.legacyInstalled.length > 0) {
+    for (const legacySkillName of globalSkill.legacyInstalled) {
+      runSkills(["remove", legacySkillName, "-g", "-y"]);
+      if (readInstalledSkill(legacySkillName)) {
+        throw new Error(`legacy global ${legacySkillName} skill is still installed`);
+      }
     }
     console.log(`MIGRATED global ${skillName}`);
   }
