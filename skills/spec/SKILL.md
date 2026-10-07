@@ -124,7 +124,10 @@ After the user confirms alignment:
    decisions, alternatives and rationale, implementation steps, verification
    at the chosen seams, and explicit scope. Link relevant existing ADRs as
    reference material. Use project glossary terms where applicable and number
-   every list.
+   every list. Show the planned file hierarchy as a plain-text tree rooted at
+   the project directory, listing files you intend to create or modify. Use
+   `+` for create and `~` for modify, and state the legend. Include the tree
+   when presenting the plan and in the written plan.
 3. Include a post-implementation documentation step in the plan, following
    the requirements below. Do not perform that step while planning.
 4. Do not publish to an issue tracker unless asked. Keep the plan current as
