@@ -23,10 +23,10 @@ deferred required check is unfinished work, even when the code is written.
    repository's [scoped execution guidance](../use-morgs32-wiki-patterns/references/patterns/tooling/scoped-execution.md)
    for discovery and checks when available.
 3. Verify at the relevant seams as work progresses, using checks allowed by
-   the active repository. Review the result against the plan's behavior and
-   the repository's conventions. Resolve in-scope failures in this chat, then
-   rerun the checks affected by each fix. Do not stop at a list of files
-   changed while required work remains.
+   the active repository. When adding or changing tests, follow [Test scope](#test-scope).
+   Review the result against the plan's behavior and the repository's conventions.
+   Resolve in-scope failures in this chat, then rerun the checks affected by each
+   fix. Do not stop at a list of files changed while required work remains.
 4. If an existing issue outside scope blocks a required check, diagnose enough
    to propose a bounded repair and ask before expanding scope. When progress
    requires a material decision, credentials, permission, or an external-state
@@ -37,9 +37,24 @@ deferred required check is unfinished work, even when the code is written.
 
 ## Test scope
 
+**Do not overscope tests.** Keep tests readable, concise, and proportional to the
+change. Limiting coverage is an acceptable tradeoff when it makes tests simpler,
+tidier, easier to use, and easier to read.
+
 - In testing, always prefer concision over comprehensiveness: use the smallest
   set of meaningful tests that proves the required behavior and failure paths,
-  rather than exhaustive coverage.
+  rather than exhaustive coverage. Avoid duplicated guarantees or tests for every
+  internal helper.
+- Make each test's setup, action, and expected result easy to understand. Simplify
+  the scenario before introducing machinery to support it.
+- Keep fixtures small enough to live inside the test file whenever possible.
+  Include only the data and setup the scenario needs. Minor duplication does not
+  justify separate fixture files, shared builders, or a test harness.
+- Introduce fixture abstractions deliberately when they provide a concrete
+  benefit—for example, preparing and disposing an in-memory database reused
+  across tests. Keep scenario-specific inputs and assertions visible in the test.
+
+This guidance governs test authoring; required verification still applies.
 
 ## Plan status
 
