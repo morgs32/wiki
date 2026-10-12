@@ -35,6 +35,12 @@ deferred required check is unfinished work, even when the code is written.
    when the user answers, resume the same implementation through verification
    and archival.
 
+## Test scope
+
+- In testing, always prefer concision over comprehensiveness: use the smallest
+  set of meaningful tests that proves the required behavior and failure paths,
+  rather than exhaustive coverage.
+
 ## Plan status
 
 When an active plan exists, keep a **Remaining work** section at its end. List

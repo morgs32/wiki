@@ -186,6 +186,10 @@ complexity is essential and stop.
 
 ## Make the tests teach the slice
 
+In testing, always prefer concision over comprehensiveness: use the smallest set
+of meaningful tests that proves the required behavior and failure paths, rather
+than exhaustive coverage.
+
 Use the [shared test organization convention](../../patterns/references/patterns/testing/colocate-single-subject-specs.ts)
 and the consuming repository's runtime profile. Do not duplicate their rules
 or invent a new test workflow.

@@ -37,6 +37,9 @@ owns those promises. Do not move these cases to a schema suite.
 
 ## Write or review the specs
 
+- In testing, always prefer concision over comprehensiveness: use the smallest
+  set of meaningful tests that proves the required behavior and failure paths,
+  rather than exhaustive coverage.
 - Use valid fixtures for internal calls. Use the real SDK constructor when it
   establishes required identity or invariants; plain typed literals are sufficient
   when no such construction is required. Do not cast malformed props into an
