@@ -1,0 +1,23 @@
+# OS metadata
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+Desktop.ini
+
+# Editor scratch files
+*.swp
+*.swo
+*~
+
+# Dependencies and interpreter caches
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local credentials; keep shareable examples
+.env
+.env.*
+!.env.example
+!.env.*.example
