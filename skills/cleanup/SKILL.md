@@ -5,7 +5,7 @@ description: >-
   visual HTML report, then grill through whichever one you pick. Use when the
   user says cleanup, /cleanup, architecture cleanup, scan for overload, props
   discrimination, or misnamed files; also for make-obvious, slop, prune,
-  /cleanup-mode, judge, casts, or import cleanup.
+  /cleanup-mode, judge, casts, import cleanup, or test review and restructuring.
 ---
 
 # Cleanup
@@ -21,7 +21,7 @@ This command is _informed_ by the project's domain model and built on a shared d
 
 Default `/cleanup` runs the architecture scan below (Explore → HTML report → grilling).
 
-Skip the HTML survey and read [make-obvious](references/make-obvious.md) when the user named a slice, or asked for slop, prune, simplify, `/cleanup-mode`, judge, imports, or casts.
+Skip the HTML survey and read [make-obvious](references/make-obvious.md) when the user named a slice, or asked for slop, prune, simplify, `/cleanup-mode`, judge, imports, casts, or test review and restructuring.
 
 After the user picks a report candidate that is a local simplify rather than a deepening, read that same reference before editing.
 

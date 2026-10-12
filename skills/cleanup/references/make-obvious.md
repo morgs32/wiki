@@ -20,6 +20,10 @@ Match the lens to what the user authorized:
   [the cleanup lenses](cleanup.md).
 - **Casts** — audit or remove TypeScript assertions; read
   [the cast lens](casts.md) before touching a cast.
+- **Test / Judge** — review test organization and report actionable findings
+  without moving or rewriting tests.
+- **Test / Restructure** — organize one observable promise, preserve its
+  coverage, and verify it; continue only within an explicitly bounded larger scope.
 - **Pass** — process an explicitly bounded cleanup scope as successive slices;
   read [the cleanup lenses](cleanup.md).
 
@@ -45,8 +49,10 @@ pause unless it changes behavior, public surface, ownership, or architecture.
    wrapper around one simple call, read **inline-one-call-simple-helpers**.
    When the slice contains concurrency, scopes, fibers, latches, streams,
    subscriptions, or cancellation, also read **Concurrency slice lens**. For
-   imports, casts, or a named cleanup smell, read the matching pattern instead
-   of loading unrelated workflow guidance.
+   test review or restructuring, read the shared test organization convention
+   linked below and inspect the consuming runtime's test discovery config.
+   For imports, casts, or a named cleanup smell, read the matching pattern
+   instead of loading unrelated workflow guidance.
 5. For library primitives, inspect the installed version first and use vendored
    or upstream source as explanatory reference. When versions differ, append
    one brief version note to the local glossary.
@@ -63,10 +69,11 @@ terminology, and include only:
 2. **Boundary** — inputs, outputs, owned state, failures, and lifetime.
 3. **Local glossary** — each unfamiliar primitive, its local name, and the one
    job it performs here.
-4. **Ownership view** — a small tree or table when resources have nested
-   lifetimes.
+4. **Ownership view** — a small tree, table, or diagram when resources have
+   nested lifetimes. Show which owner stays outside the proposed move.
 5. **Execution view** — one ordinary sequence, followed by one race timeline at
-   a time only when a race defines the behavior.
+   a time only when a race defines the behavior. Use a compact sequence or flow
+   diagram when it makes ordering or branching easier to read than prose.
 6. **Invariant table** — significant states or events and their observable
    results.
 7. **Complexity judgment** — what is essential to the contract versus
@@ -74,13 +81,20 @@ terminology, and include only:
 8. **Proposed move** — the smallest deletion, inline, colocation, rename, direct
    import, or domain boundary that would make the slice obvious, plus the
    existing tests that protect it; or an explicit **no refactor warranted**
-   conclusion.
+   conclusion. When proposing a boundary whose inputs, outputs, or call-site
+   effect are not already obvious, include a short signature and caller sketch
+   rather than naming the helper alone.
 9. **Vocabulary proof** — when the move introduces a noun, identify the
    distinct value, responsibility, or lifetime it names. If it is only another
    view or duplicate of an existing domain object, keep the existing noun.
 
 Use a proposed function name like an annotation: the parent should state what
 happens while the function owns how it happens.
+
+Readability is prized. A snippet or diagram must expose a decision, ownership
+boundary, or execution order more clearly than prose would. Prefer one small,
+exact artifact that replaces explanation; do not decorate the brief, dump a
+speculative implementation, or draw another end-to-end system tour.
 
 Do not infer a domain concept from an existing accessor name. A function named
 `readRouteMetadata(route)` may be historical indirection around the Route
@@ -190,23 +204,26 @@ In testing, always prefer concision over comprehensiveness: use the smallest set
 of meaningful tests that proves the required behavior and failure paths, rather
 than exhaustive coverage.
 
-Use the [shared test organization convention](../../patterns/references/patterns/testing/colocate-single-subject-specs.ts)
+Use the [shared test organization convention](../../use-morgs32-wiki-patterns/references/patterns/testing/colocate-single-subject-specs.ts)
 and the consuming repository's runtime profile. Do not duplicate their rules
 or invent a new test workflow.
 
-For review-only work, report numbered actionable findings without moving tests.
-For restructuring, handle one observable promise, verify it, and stop unless
-the user requested a bounded set of slices. A review can conclude that no move
-is warranted; file length alone is not a defect.
+In **Test / Judge**, report numbered actionable findings that name the source
+or behavior owner, a concrete coverage, runtime discovery, fixture, scheduling,
+or annotation problem, and the smallest correction. Keep the review read-only.
+In **Test / Restructure**, handle one observable promise, verify it, and stop
+unless the user requested a bounded set of slices. A review can conclude that
+no move is warranted; file length alone is not a defect.
 
 1. Build an old-test to invariant to new-test coverage map before moving tests.
 2. Group tests by observable behavior. Keep fixtures local to that behavior and
    import them directly; do not create a universal machine or fake runtime.
 3. Keep concurrency deterministic with barriers such as `Deferred`. Do not use
    sleeps, polling, or timeouts as evidence of ordering.
-4. Put a short happens-before timeline above a test whose scheduling is not
-   obvious. Extract repeated scheduling only behind a domain-named scenario
-   driver, while keeping assertions in the test.
+4. Add an ordered phase overview and matching numbered checkpoints only when a
+   test has multiple phases or scheduling that is otherwise difficult to read.
+   Extract repeated scheduling only behind a domain-named scenario driver,
+   while keeping assertions in the test.
 5. Preserve cross-observer assertions when their shared identity or failure
    cause is the invariant.
 

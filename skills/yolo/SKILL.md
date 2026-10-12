@@ -9,6 +9,7 @@ description: >-
 
 ## Rule
 
+- No verification, no tests.
 - Do not keep backward-compatible fallback APIs once migration is in progress and callsites are updated.
 - Remove legacy helpers, aliases, and deprecated wrappers instead of retaining them as optional pathways.
 - Prefer breaking cleanup commits over adding deprecation layers.
