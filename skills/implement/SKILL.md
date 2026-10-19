@@ -65,7 +65,7 @@ active when implementation is complete but verification is pending.
 
 After implementation and required verification are complete, record the
 outcome, set **Remaining work: None**, and archive the plan according to the
-active project's conventions. In projects using [`spec` document conventions](../spec/SKILL.md#document-conventions),
+active project's conventions. In projects using [`grill-me` document conventions](../grill-me/SKILL.md#document-conventions),
 preserve the filename and repair inbound and relative links. Cancellation or
 supersession follows those conventions; do not present it as verified completion.
 If the request exists only in chat, track its remaining work there instead of

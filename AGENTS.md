@@ -125,7 +125,7 @@ DO NOT ADD UNREQUESTED FUNCTIONALITY. IF I GIVE YOU A COMPONENT TO ADD WITH MOCK
 
 ### Design decisions
 
-Use the [spec skill](skills/spec/SKILL.md) for unresolved material design decisions. Requested or approved decisions need no repeated confirmation; ordinary functions, types, and fixes within scope do not require a spec workflow.
+Use the [Grill me skill](skills/grill-me/SKILL.md) for unresolved material design decisions. Requested or approved decisions need no repeated confirmation; ordinary functions, types, and fixes within scope do not require a Grill me workflow.
 
 ### No re-exports outside barrels or worker entrypoints
 
@@ -145,7 +145,7 @@ When a generic factory's return type does not match, **fix the factory or the ba
 
 ### Plan documents
 
-Keep active plans in `wiki/plans/` and governing decisions in `wiki/adrs/`. Follow [spec conventions](skills/spec/SKILL.md#document-conventions), [implement](skills/implement/SKILL.md#plan-status) for completion and archival, and [handoff conventions](skills/handoff/SKILL.md#destination-and-lifecycle). Mark replaced ADRs **Superseded** and link their successors; archive one only when it no longer governs anything and archival is wanted.
+Keep active plans in `wiki/plans/` and governing decisions in `wiki/adrs/`. Follow [Grill me conventions](skills/grill-me/SKILL.md#document-conventions), [implement](skills/implement/SKILL.md#plan-status) for completion and archival, and [handoff conventions](skills/handoff/SKILL.md#destination-and-lifecycle). Mark replaced ADRs **Superseded** and link their successors; archive one only when it no longer governs anything and archival is wanted.
 
 ### Doc placement
 

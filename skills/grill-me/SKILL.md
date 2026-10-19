@@ -1,16 +1,16 @@
 ---
-name: spec
+name: grill-me
 description: >-
   Grill an unresolved design one decision at a time, sharpen the domain model,
   then write or review an implementation plan in the active project's planning
   tree. Defer glossary updates and warranted ADRs until after implementation.
-  Use when the user says /spec, requests a design interview, implementation
+  Use when the user says /grill-me, requests a design interview, implementation
   plan, or plan review.
 ---
 
-# Spec (grill → plan)
+# Grill me
 
-Use `spec` as the entrypoint for design decisions and plans. Do not create new
+Use `grill-me` as the entrypoint for design decisions and plans. Do not create new
 spec files. For a requested plan revision, review, or archival, work on that
 document directly; do not restart the interview.
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tests"
+  short_description: "Zerospin tests by behavioral contract"
+  default_prompt: "Use $tests to write or review tests for these Zerospin methods and their admission boundaries."

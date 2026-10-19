@@ -1,5 +1,5 @@
 ---
-name: specs
+name: tests
 description: >-
   Write, review, or organize Zerospin behavioral tests by assigning input
   validation to RPC and SDK boundaries and testing internal methods with valid
@@ -7,7 +7,7 @@ description: >-
   specifications or a repository-wide quality pass.
 ---
 
-# Specs
+# Tests
 
 Test each method over its admitted input domain. Test malformed input at the
 boundary that admits it. Test business failures where the business decision
