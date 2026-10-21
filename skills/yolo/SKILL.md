@@ -1,21 +1,36 @@
 ---
 name: yolo
 description: >-
-  Enforces yolo-mode cleanup: when a migration is completed, remove the old
-  compatibility path instead of preserving it for legacy callers.
+  Apply clean-slate design and a hard cutover when the user invokes yolo:
+  preserve requirements, reconsider the implementation, and replace legacy paths.
 ---
 
 # Yolo mode
 
-## Rule
+YOLO means clean-slate design, hard cutover, and reset of affected obsolete state
+within the authorized scope.
 
-- No verification, no tests.
-- Do not keep backward-compatible fallback APIs once migration is in progress and callsites are updated.
-- Remove legacy helpers, aliases, and deprecated wrappers instead of retaining them as optional pathways.
-- Prefer breaking cleanup commits over adding deprecation layers.
+## Rules
 
-## Application
+- Preserve requirements and explicitly chosen concepts. Reconsider their
+  implementation, ownership, storage, and lifecycle from scratch; keeping a
+  concept does not mean keeping its implementation.
+- DISREGARD all existing machinery. Do not be constrained to a bad design!
+- Include required lifecycle behavior now, including replacement and rotation.
+  YOLO does not justify deferring requirements.
+- Implement one coherent target design. Carry forward no legacy tables,
+  provisioning states, migrations, aliases, deprecated wrappers, or compatibility
+  paths by default. Retain existing implementation only when the target design
+  independently justifies it or the user explicitly requires it.
+- Reset affected obsolete state within the authorized scope. A skill invocation
+  does not authorize deleting unrelated storage or credentials; resolve missing
+  target or deletion authorization before performing a reset.
+- Validate the resulting design and behavior with appropriate scoped checks.
 
-- If a stream decoding migration moves callers to `readAndDecodeStream`,
-  remove old full-buffer helpers like `readStreamToBytes`/`decodeMany` from codec API.
-- If a schema-backed transport migration is complete, delete old non-conforming transport glue in the same change.
+## Example
+
+An instance needs secret and publishable credentials. Preserve those requirements,
+then redesign credential ownership, provisioning, replacement, and rotation from
+scratch. Inherit no existing table layout or provisioning states, and add no
+migration or compatibility paths by default. Any reset or credential deletion
+must stay within the authorized scope.
