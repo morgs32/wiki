@@ -123,7 +123,8 @@ See [README.md](./README.md) for format.
 
 | File                                       | Description                                                        |
 | ------------------------------------------ | ------------------------------------------------------------------ |
-| `react/prefer-design-system-components.ts` | Default to existing shadcn components instead of hand-styled HTML |
+| `react/component-filename-matches-component.md` | Match PascalCase component filenames; preserve shadcn dash-case |
+| `react/prefer-design-system-components.ts` | Use existing design-system controls and Button asChild router links |
 
 ## runtime
 

@@ -35,6 +35,16 @@ deferred required check is unfinished work, even when the code is written.
    when the user answers, resume the same implementation through verification
    and archival.
 
+## Browser recovery
+
+When working alongside a browser, resolve errors caused by the change before
+finishing. Refresh first when it can load the updated code. If a restart is
+needed, find the responsible workspace server command and terminate its child
+process tree, regardless of which terminal or process manager launched it.
+Never terminate unrelated processes merely because they use a familiar port.
+Restart with the original workspace command, wait for actual readiness, then
+refresh or reopen the page and verify that the error is gone.
+
 ## Test scope
 
 **Do not overscope tests.** Keep tests readable, concise, and proportional to the
