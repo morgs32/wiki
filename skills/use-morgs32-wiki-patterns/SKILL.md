@@ -2,8 +2,9 @@
 name: use-morgs32-wiki-patterns
 description: >-
   Consult Morgan's shared TypeScript, Effect, RPC, runtime, testing, and naming
-  patterns when implementing or reviewing code, or when asked about those
-  conventions. Read only references relevant to the task.
+  patterns when discussing architecture, proposing designs, implementing or
+  reviewing code, or when asked about those conventions. Read only references
+  relevant to the task.
 ---
 
 # Use Morgs32 Wiki Patterns

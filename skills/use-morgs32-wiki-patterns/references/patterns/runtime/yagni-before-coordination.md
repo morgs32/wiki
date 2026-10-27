@@ -22,6 +22,24 @@ prevents. If neither a requirement nor caller exists, or the behavior cannot be
 stated observably, do not build the feature. Do not solve the consequences of a
 feature before proving the feature is needed.
 
+## Inspect existing capabilities before proposing choices
+
+Before proposing a new mechanism, state what data each consumer needs, where
+it already exists, how it can be observed, and which action must execute
+durably. Inspect existing capabilities for each responsibility. Propose additions
+only for the demonstrated gap.
+
+Trace current APIs and callers, owned state, observation paths and execution
+mechanisms before presenting architectural options. Distinguish reading an
+existing fact from durably triggering the next action; establish the responsible
+component and its lifetime and recovery where those are required. Existing
+observation does not by itself prove orchestration, and missing orchestration
+does not imply that new data or a new return channel is needed.
+
+Do not ask the user to choose between new mechanisms before checking whether
+existing capabilities satisfy the requirement. Keep the requirement fixed while
+comparing mechanisms; do not add guarantees to justify a preferred design.
+
 ## Require coordination to purchase a system invariant
 
 Coordination machinery must buy an explicitly required end-to-end invariant.
